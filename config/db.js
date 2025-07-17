@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 export const connectDB = async () => {
+  const db = process.env.MONGODB_URI;
+  const dbStr = db.toString();
   try {
-    await mongoose.connect(
-      "mongodb+srv://gesoranthony:kzSTxlL0rfuORPYa@roadmate.6sayypr.mongodb.net/?retryWrites=true&w=majority&appName=roadmate"
-    );
+    await mongoose.connect(dbStr);
     console.log("✅ MongoDB connected");
   } catch (err) {
     console.error("❌ DB connection error:", err.message);
