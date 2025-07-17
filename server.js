@@ -1,47 +1,18 @@
 import express from "express";
-import cors from "cors";
+import dotenv from "dotenv";
+import { connectDB } from "./config/db.js";
+import authRoutes from "./routes/auth.routes.js";
 
-const PORT = 3001;
+dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send({
-    RouteName: "home route",
-    message: "set up the logic for home route here...",
-  });
-});
-
-app.post("/users", (req, res) => {
-  const user = req.body;
-  res.send(user);
-});
-
-app.post("/driverRequest", (req, res) => {
-  const driverRequest = req.body;
-  res.send(driverRequest);
-});
-
-app.get("/availableMech", (req, res) => {
-  res.send({ availableMechanic: "fetched from database" });
-});
-
-app.post("/mechanicReg", (req, res) => {
-  const mechRegData = req.body;
-  res.send(mechRegData);
-});
-
-app.get("/availableTasks", (req, res) => {
-  res.send({ availableTasks: "details fetched from database" });
-});
-
-app.get("/completedTask", (req, res) => {
-  res.send({ data: "Details fetched from Database" });
-});
+app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
-  console.log(`server running on port ${PORT}`);
+  connectDB();
+  console.log(`🚗 Server running on http://localhost:${PORT}`);
 });
