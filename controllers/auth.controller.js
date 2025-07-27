@@ -1,15 +1,21 @@
 import { login, register } from "../services/auth.service.js";
 
 export const registerMechanic = async (req, res) => {
-  const { name, personalNumber, password } = req.body;
+  const { name, personalNumber, password, clerkUid } = req.body;
   try {
-    const newMechanic = await register({ name, personalNumber, password });
+    const newMechanic = await register({
+      name,
+      personalNumber,
+      password,
+      clerkUid,
+    });
     res.status(201).json({
       message: "Registration successful",
       mechanic: {
         id: newMechanic._id,
         name: newMechanic.name,
         personalNumber: newMechanic.personalNumber,
+        clerkUid: newMechanic.clerkUid,
       },
     });
   } catch (err) {
@@ -27,6 +33,7 @@ export const loginMechanic = async (req, res) => {
         id: mechanic._id,
         name: mechanic.name,
         personalNumber: mechanic.personalNumber,
+        clerkUid: mechanic.clerkUid,
       },
     });
   } catch (err) {

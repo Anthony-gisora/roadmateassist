@@ -1,0 +1,20 @@
+import Request from "../models/request.model.js";
+
+export const submitRequest = async ({ driverId, requestType, details }) => {
+  const existing = await Request.findOne({
+    driverId,
+    requestType,
+    status: "pending",
+  });
+
+  if (existing) {
+    existing.details = details;
+    existing.updatedAt = Date.now();
+    await existing.save();
+    return { type: "updated", request: existing };
+  }
+
+  const newReq = new Request({ driverId, requestType, details });
+  await newReq.save();
+  return { type: "created", request: newReq };
+};
