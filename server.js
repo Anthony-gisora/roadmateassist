@@ -14,13 +14,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("api/auth", authRoutes);
-app.use("api/request", requestRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/request", requestRoutes);
 
-app.listen(PORT, async () => {
+app.listen(PORT, async (req, res) => {
   try {
     await connectDB();
-    console.log(`server running on port${PORT}`);
+    console.log(`server running on port ${PORT}`);
   } catch (error) {
     console.error("❌ Failed to connect to DB:", err.message);
     process.exit(1);
