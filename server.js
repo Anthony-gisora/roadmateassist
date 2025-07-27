@@ -7,7 +7,7 @@ import authRoutes from "./routes/auth.routes.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 app.use(express.json());
 
@@ -18,7 +18,7 @@ app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-const startServer = async () => {
+app.listen(PORT, async (req, res) => {
   try {
     await connectDB();
     app.listen(PORT, () => {
@@ -28,6 +28,4 @@ const startServer = async () => {
     console.error("❌ Failed to connect to DB:", err.message);
     process.exit(1);
   }
-};
-
-startServer();
+});
