@@ -14,7 +14,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://localhost:5173", "https://roadmateassist.netlify.app"],
+    origin: [
+      "https://localhost:5173",
+      "https://roadmateassist.onrender.com/api/auth/login",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     // credentials: true,
   })
