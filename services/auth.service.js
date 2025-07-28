@@ -8,10 +8,21 @@ export const login = async (personalNumber, password) => {
   const isMatch = await bcrypt.compare(password, mechanic.password);
   if (!isMatch) throw new Error("Invalid Personal Number or Password");
 
+  if (!mechanic || !isMatch) {
+    throw new Error("Invalid Personal Number or Password");
+  }
+
+  console.log("✅ Mechanic authenticated");
+
   return mechanic;
 };
 
-export const register = async ({ clerkUid, name, personalNumber, password }) => {
+export const register = async ({
+  clerkUid,
+  name,
+  personalNumber,
+  password,
+}) => {
   const existing = await Mechanic.findOne({ personalNumber });
   if (existing) throw new Error("Personal number already in use");
 
