@@ -8,33 +8,36 @@ import adminRoutes from "./routes/admin.routes.js";
 
 dotenv.config();
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 
+// CORS configuration
 app.use(
   cors({
     origin: [
-      "https://localhost:5173",
-      "https://roadmateassist.onrender.com/api/auth/login",
+      "https://localhost:5173", // Local development frontend
+      "https://roadmateassist.onrender.com", // Production frontend
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
-    // credentials: true,
+    credentials: true, // Allow credentials (cookies, headers)
   })
 );
 
 app.use(express.json());
 
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/request", requestRoutes);
 app.use("/api/admin", adminRoutes);
 
-app.listen(PORT, async (req, res) => {
+// Start the server
+app.listen(PORT, async () => {
   try {
     await connectDB();
-    console.log(`server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
   } catch (error) {
-    console.error("❌ Failed to connect to DB:", err.message);
+    console.error("❌ Failed to connect to DB:", error.message);
     process.exit(1);
   }
 });
