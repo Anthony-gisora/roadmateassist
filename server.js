@@ -12,26 +12,20 @@ const PORT = process.env.PORT || 5000;
 
 const app = express();
 
-// CORS configuration
 app.use(
   cors({
-    origin: [
-      "https://localhost:5173", // Local development frontend
-      "https://roadmateassist.onrender.com", // Production frontend
-    ],
+    origin: ["https://localhost:5173", "https://roadmateassist.netlify.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true, // Allow credentials (cookies, headers)
+    credentials: true,
   })
 );
 
 app.use(express.json());
 
-// Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/request", requestRoutes);
+app.use("/api/req", requestRoutes);
 app.use("/api/admin", adminRoutes);
 
-// Start the server
 app.listen(PORT, async () => {
   try {
     await connectDB();
