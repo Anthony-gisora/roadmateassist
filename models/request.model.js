@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const requestSchema = new mongoose.Schema(
   {
     driverId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Driver",
       required: true,
     },
