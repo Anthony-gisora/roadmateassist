@@ -5,17 +5,17 @@ import mongoose from "mongoose";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { connectDB } from "./config/db.js";
+
 import requestRoutes from "./routes/request.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import notificationRoutes from "./routes/notification.routes.js"; // <-- New
 
 dotenv.config();
-
 const PORT = process.env.PORT || 5000;
 const app = express();
 const httpServer = createServer(app);
 
-// Initialize Socket.IO
 const io = new Server(httpServer, {
   cors: {
     origin: ["http://localhost:5173", "https://roadmateassist.netlify.app"],
@@ -24,7 +24,6 @@ const io = new Server(httpServer, {
   },
 });
 
-// Middleware
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://roadmateassist.netlify.app"],
@@ -38,17 +37,17 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/req", requestRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/notifications", notificationRoutes); // <-- Register route
 
-// Socket.IO event handlers
+// Socket.IO live updates
 io.on("connection", (socket) => {
   console.log("🟢 Mechanic connected:", socket.id);
-
   socket.on("disconnect", () => {
     console.log("🔴 Mechanic disconnected:", socket.id);
   });
 });
 
-// MongoDB change stream to watch request changes
+// MongoDB change stream
 const watchRequestChanges = async () => {
   const collection = mongoose.connection.collection("requests");
   const changeStream = collection.watch();
@@ -58,7 +57,7 @@ const watchRequestChanges = async () => {
       const docId = change.documentKey._id;
       const requestData = await collection.findOne({ _id: docId });
 
-      if (requestData && requestData.requestType && requestData.details) {
+      if (requestData?.requestType && requestData?.details) {
         io.emit("new-request", {
           message: "New request created or updated",
           requestType: requestData.requestType,
