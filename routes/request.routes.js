@@ -7,6 +7,6 @@ import {
 const router = express.Router();
 
 router.post("/requests", handleDriverRequest);
-router.put("/updateStatus/:id", updateStatus);
+router.patch("/updateStatus/:id", updateStatus);
 
 export default router;
