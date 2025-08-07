@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import { createServer } from "http";
+import http from "http";
 import { Server } from "socket.io";
 import { connectDB } from "./config/db.js";
 import requestRoutes from "./routes/request.routes.js";
@@ -13,7 +13,7 @@ dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 const app = express();
-const httpServer = createServer(app);
+const httpServer = http.createServer(app);
 
 // Initialize Socket.IO
 const io = new Server(httpServer, {
