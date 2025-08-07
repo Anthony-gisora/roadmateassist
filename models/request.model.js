@@ -4,7 +4,6 @@ const requestSchema = new mongoose.Schema(
   {
     driverId: {
       type: String,
-      ref: "Driver",
       required: true,
     },
     requestType: {

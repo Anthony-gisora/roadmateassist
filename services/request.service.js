@@ -1,3 +1,4 @@
+import { connectDB } from "../config/db.js";
 import Request from "../models/request.model.js";
 
 export const submitRequest = async ({ driverId, requestType, details }) => {
@@ -16,5 +17,6 @@ export const submitRequest = async ({ driverId, requestType, details }) => {
 
   const newReq = new Request({ driverId, requestType, details });
   await newReq.save();
+
   return { type: "created", request: newReq };
 };
