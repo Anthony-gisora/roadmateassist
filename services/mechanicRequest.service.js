@@ -7,3 +7,8 @@ export const getAllRequests = async () => {
 export const createRequest = async (data) => {
   return await MechanicRequest.create(data);
 };
+
+// ✅ New service to fetch mechanics
+export const getAllMechanics = async () => {
+  return await Mechanic.find().select("name distance");
+};

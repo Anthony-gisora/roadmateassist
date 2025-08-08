@@ -1,7 +1,14 @@
 import Mechanic from "../models/mechanic.model.js";
 import bcrypt from "bcrypt";
 
-export const login = async (personalNumber, password) => {
+export const login = async (
+  name,
+  personalNumber,
+  password,
+  clerkUid,
+  location,
+  distance
+) => {
   const mechanic = await Mechanic.findOne({ personalNumber });
   if (!mechanic) throw new Error("Invalid Personal Number or Password");
 
@@ -18,15 +25,24 @@ export const login = async (personalNumber, password) => {
 };
 
 export const register = async ({
-  clerkUid,
   name,
   personalNumber,
   password,
+  clerkUid,
+  location,
+  distance,
 }) => {
   const existing = await Mechanic.findOne({ personalNumber });
   if (existing) throw new Error("Personal number already in use");
 
-  const mechanic = new Mechanic({ name, personalNumber, password, clerkUid });
+  const mechanic = new Mechanic({
+    name,
+    personalNumber,
+    password,
+    clerkUid,
+    location,
+    distance,
+  });
   await mechanic.save();
   return mechanic;
 };

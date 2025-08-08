@@ -1,14 +1,22 @@
 import { login, register } from "../services/auth.service.js";
 
 export const registerMechanic = async (req, res) => {
-  const { name, personalNumber, password, clerkUid } = req.body;
+  const { name, personalNumber, password, clerkUid, location, distance } =
+    req.body;
+
   try {
     const newMechanic = await register({
       name,
       personalNumber,
       password,
       clerkUid,
+      location: {
+        lat: location?.lat,
+        lng: location?.lng,
+      },
+      distance,
     });
+
     res.status(201).json({
       message: "Registration successful",
       mechanic: {
@@ -16,6 +24,8 @@ export const registerMechanic = async (req, res) => {
         name: newMechanic.name,
         personalNumber: newMechanic.personalNumber,
         clerkUid: newMechanic.clerkUid,
+        location: newMechanic.location,
+        distance: newMechanic.distance,
       },
     });
   } catch (err) {
