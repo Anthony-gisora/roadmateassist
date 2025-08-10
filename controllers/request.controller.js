@@ -32,3 +32,22 @@ export const updateRequestStatus = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const updateRequestComplete = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updated = await requestModel.findByIdAndUpdate(
+      id,
+      { status: "completed" },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ message: "Request not found" });
+
+    res.status(200).json(updated);
+  } catch (err) {
+    console.error("Update error:", err.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
