@@ -47,6 +47,12 @@ io.on("connection", (socket) => {
   });
 });
 
+// Driver Location Update
+io.on("driverLocationUpdate", (data) => {
+  console.log("📍 Driver Location Update:", data);
+  io.emit("driverLocationUpdate", data); // Broadcast to all clients
+});
+
 // MongoDB change stream
 const watchRequestChanges = async () => {
   const collection = mongoose.connection.collection("requests");
