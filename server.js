@@ -42,10 +42,13 @@ app.use("/api/notifications", notificationRoutes); // <-- Register route
 // Socket.IO live updates
 io.on("connection", (socket) => {
   console.log("🟢 A user connected:", socket.id);
-  // Driver Location Update
+  // Listen for driver location updates
   socket.on("driverLocationUpdate", (data) => {
-    console.log("📍 Driver Location Update:", data);
-    socket.emit("driverLocationUpdate", data); // Broadcast to all clients
+    // data: { driverId, lat, lng }
+    console.log("Driver location update:", data);
+
+    // emit to  connected clients
+    socket.emit("driverLocationUpdate", data);
   });
   socket.on("disconnect", () => {
     console.log("🔴 A user disconnected:", socket.id);
