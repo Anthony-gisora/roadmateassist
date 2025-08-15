@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 const httpServer = createServer(app);
 
-const io = new Server(httpServer, {
+export const io = new Server(httpServer, {
   cors: {
     origin: ["http://localhost:5173", "https://roadmateassist.netlify.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -41,16 +41,15 @@ app.use("/api/notifications", notificationRoutes); // <-- Register route
 
 // Socket.IO live updates
 io.on("connection", (socket) => {
-  console.log("🟢 Mechanic connected:", socket.id);
-  socket.on("disconnect", () => {
-    console.log("🔴 Mechanic disconnected:", socket.id);
+  console.log("🟢 A user connected:", socket.id);
+  // Driver Location Update
+  socket.on("driverLocationUpdate", (data) => {
+    console.log("📍 Driver Location Update:", data);
+    socket.emit("driverLocationUpdate", data); // Broadcast to all clients
   });
-});
-
-// Driver Location Update
-io.on("driverLocationUpdate", (data) => {
-  console.log("📍 Driver Location Update:", data);
-  io.emit("driverLocationUpdate", data); // Broadcast to all clients
+  socket.on("disconnect", () => {
+    console.log("🔴 A user disconnected:", socket.id);
+  });
 });
 
 // MongoDB change stream
