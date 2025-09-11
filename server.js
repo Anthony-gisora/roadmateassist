@@ -18,7 +18,11 @@ const httpServer = createServer(app);
 
 export const io = new Server(httpServer, {
   cors: {
-    origin: ["http://localhost:5173", "https://roadmateassist.netlify.app"],
+    origin: [
+      "http://localhost:5173",
+      "https://roadmateassist.netlify.app",
+      "http://localhost:8081",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   },
