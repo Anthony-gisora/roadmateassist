@@ -17,6 +17,7 @@ const requestSchema = new mongoose.Schema(
       enum: ["pending", "InProgress", "completed"],
       default: "pending",
     },
+    location: [],
   },
   { timestamps: true }
 );

@@ -1,7 +1,12 @@
 import { connectDB } from "../config/db.js";
 import Request from "../models/request.model.js";
 
-export const submitRequest = async ({ driverId, requestType, details }) => {
+export const submitRequest = async ({
+  driverId,
+  requestType,
+  details,
+  location,
+}) => {
   const existing = await Request.findOne({
     driverId,
     requestType,
@@ -15,7 +20,7 @@ export const submitRequest = async ({ driverId, requestType, details }) => {
     return { type: "updated", request: existing };
   }
 
-  const newReq = new Request({ driverId, requestType, details });
+  const newReq = new Request({ driverId, requestType, details, location });
   await newReq.save();
 
   return { type: "created", request: newReq };

@@ -2,9 +2,14 @@ import requestModel from "../models/request.model.js";
 import { submitRequest } from "../services/request.service.js";
 
 export const handleDriverRequest = async (req, res) => {
-  const { driverId, requestType, details } = req.body;
+  const { driverId, requestType, details, location } = req.body;
   try {
-    const result = await submitRequest({ driverId, requestType, details });
+    const result = await submitRequest({
+      driverId,
+      requestType,
+      details,
+      location,
+    });
     res.status(200).json({
       message: `Request successfully ${result.type}.`,
       data: result.request,
