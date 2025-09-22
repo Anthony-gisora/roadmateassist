@@ -11,6 +11,7 @@ export const submitRequest = async ({
     driverId,
     requestType,
     status: "pending",
+    servicedBy: "not yet",
   });
 
   if (existing) {

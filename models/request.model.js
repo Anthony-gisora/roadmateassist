@@ -17,6 +17,7 @@ const requestSchema = new mongoose.Schema(
       enum: ["pending", "InProgress", "completed"],
       default: "pending",
     },
+    servicedBy: { type: String, default: "not yet" },
     location: [],
   },
   { timestamps: true }
