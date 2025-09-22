@@ -21,7 +21,13 @@ export const submitRequest = async ({
     return { type: "updated", request: existing };
   }
 
-  const newReq = new Request({ driverId, requestType, details, location });
+  const newReq = new Request({
+    driverId,
+    requestType,
+    details,
+    location,
+    servicedBy,
+  });
   await newReq.save();
 
   return { type: "created", request: newReq };
