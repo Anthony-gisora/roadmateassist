@@ -26,7 +26,6 @@ export const submitRequest = async ({
     requestType,
     details,
     location,
-    servicedBy,
   });
   await newReq.save();
 
