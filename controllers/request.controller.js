@@ -25,7 +25,7 @@ export const updateRequestStatus = async (req, res) => {
 
     const updated = await requestModel.findByIdAndUpdate(
       id,
-      { status: "InProgress" },
+      { status: "InProgress",
       { new: true }
     );
 
@@ -44,7 +44,7 @@ export const updateRequestComplete = async (req, res) => {
 
     const updated = await requestModel.findByIdAndUpdate(
       id,
-      { status: "completed" },
+      { status: "completed"},
       { new: true }
     );
 
