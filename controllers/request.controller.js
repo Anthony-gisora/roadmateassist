@@ -22,6 +22,7 @@ export const handleDriverRequest = async (req, res) => {
 export const updateRequestStatus = async (req, res) => {
   try {
     const { id, servicedBy } = req.params;
+    const { servicedBy } = req.body;
 
     const updated = await requestModel.findByIdAndUpdate(
       id,
@@ -40,7 +41,8 @@ export const updateRequestStatus = async (req, res) => {
 
 export const updateRequestComplete = async (req, res) => {
   try {
-    const { id, servicedBy } = req.params;
+    const { id } = req.params;
+    const { servicedBy } = req.body;
 
     const updated = await requestModel.findByIdAndUpdate(
       id,
