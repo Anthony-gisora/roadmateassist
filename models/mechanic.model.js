@@ -7,13 +7,12 @@ const mechanicSchema = new mongoose.Schema(
     name: { type: String, required: true },
     personalNumber: { type: String, unique: true, required: true },
     password: { type: String, required: true },
-
-    // Location fields from the first schema
+    phone: { type: String, required: true },
     location: {
       lat: { type: Number },
       lng: { type: Number },
     },
-    distance: { type: String }, // Optional, can be calculated later
+    distance: { type: String },
   },
   { timestamps: true }
 );
