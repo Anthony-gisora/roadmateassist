@@ -7,7 +7,7 @@ const mechanicSchema = new mongoose.Schema(
     name: { type: String, required: true },
     personalNumber: { type: String, unique: true, required: true },
     password: { type: String, required: true },
-    phone: { type: String, required: true, unique: true },
+    phone: { type: String, unique: true, required: true },
     location: {
       lat: { type: Number },
       lng: { type: Number },
