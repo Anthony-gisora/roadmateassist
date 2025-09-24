@@ -1,15 +1,15 @@
 import Mechanic from "../models/mechanic.model.js";
 import bcrypt from "bcrypt";
 
-export const login = async (personalNumber, password, mechId) => {
+export const login = async (personalNumber, password, mechCLkId) => {
   const mechanic = await Mechanic.findOne({ personalNumber });
 
   if (!mechanic) throw new Error("Invalid Personal Number or Password");
 
   const isMatch = await bcrypt.compare(password, mechanic.password);
-  const ismechId = mechanic.clerkUid == mechId;
+  const ismechCLkId = mechanic.clerkUid == mechCLkId;
 
-  if (!isMatch && ismechId)
+  if (!isMatch && ismechCLkId)
     throw new Error(
       "Invalid Personal Number or Password or logged through different account"
     );

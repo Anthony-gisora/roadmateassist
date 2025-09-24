@@ -42,9 +42,9 @@ export const registerMechanic = async (req, res) => {
 };
 
 export const loginMechanic = async (req, res) => {
-  const { personalNumber, password, mechId } = req.body;
+  const { personalNumber, password, mechCLkId } = req.body;
   try {
-    const mechanic = await login(personalNumber, password, mechId);
+    const mechanic = await login(personalNumber, password, mechCLkId);
     res.status(200).json({
       message: "Login successful",
       mechanic: {
