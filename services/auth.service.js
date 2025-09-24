@@ -9,13 +9,15 @@ export const login = async (personalNumber, password, mechCLkId) => {
   const isMatch = await bcrypt.compare(password, mechanic.password);
   const ismechCLkId = mechanic.clerkUid == mechCLkId;
 
-  if (!isMatch && ismechCLkId)
+  if (!isMatch && !ismechCLkId)
     throw new Error(
       "Invalid Personal Number or Password or logged through different account"
     );
 
-  if (!mechanic || !isMatch) {
-    throw new Error("Invalid Personal Number or Password");
+  if (!mechanic || !isMatch || !ismechCLkId) {
+    throw new Error(
+      "Invalid Personal Number or Password or logged through different account"
+    );
   }
 
   console.log("✅ Mechanic authenticated");
