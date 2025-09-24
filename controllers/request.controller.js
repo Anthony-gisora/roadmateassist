@@ -21,11 +21,11 @@ export const handleDriverRequest = async (req, res) => {
 
 export const updateRequestStatus = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id, servicedBy } = req.params;
 
     const updated = await requestModel.findByIdAndUpdate(
       id,
-      { status: "InProgress" },
+      { status: "InProgress", servicedBy: servicedBy },
       { new: true }
     );
 
@@ -40,11 +40,11 @@ export const updateRequestStatus = async (req, res) => {
 
 export const updateRequestComplete = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id, servicedBy } = req.params;
 
     const updated = await requestModel.findByIdAndUpdate(
       id,
-      { status: "completed" },
+      { status: "completed", servicedBy: servicedBy },
       { new: true }
     );
 
