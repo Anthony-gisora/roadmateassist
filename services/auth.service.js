@@ -22,6 +22,7 @@ export const register = async ({
   personalNumber,
   password,
   clerkUid,
+  phone,
   location,
   distance,
 }) => {
@@ -33,6 +34,7 @@ export const register = async ({
     personalNumber,
     password,
     clerkUid,
+    phone,
     location,
     distance,
   });

@@ -1,8 +1,15 @@
 import { login, register } from "../services/auth.service.js";
 
 export const registerMechanic = async (req, res) => {
-  const { name, personalNumber, password, clerkUid, location, distance } =
-    req.body;
+  const {
+    name,
+    personalNumber,
+    password,
+    clerkUid,
+    location,
+    distance,
+    phone,
+  } = req.body;
 
   try {
     const newMechanic = await register({
@@ -10,6 +17,7 @@ export const registerMechanic = async (req, res) => {
       personalNumber,
       password,
       clerkUid,
+      phone,
       location: {
         lat: location?.lat,
         lng: location?.lng,
