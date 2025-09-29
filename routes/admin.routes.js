@@ -4,6 +4,7 @@ import { Clerk } from "@clerk/clerk-sdk-node";
 import {
   fetchAllRequests,
   submitRequest,
+  fetchAllMechanics,
 } from "../controllers/admin.controller.js";
 import mechanicModel from "../models/mechanic.model.js";
 
@@ -23,7 +24,7 @@ router.get("/mechanics", async (req, res) => {
 });
 
 // ✅ Route to fetch ALL Clerk users (not just 50)
-app.get("/api/users", async (req, res) => {
+router.get("/clerkUsers", async (req, res) => {
   try {
     let allUsers = [];
     let offset = 0;
