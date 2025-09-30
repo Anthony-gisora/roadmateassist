@@ -1,5 +1,5 @@
 import express from "express";
-import { Clerk } from "@clerk/clerk-sdk-node";
+import { clerkClient } from "@clerk/clerk-sdk-node";
 
 import {
   fetchAllRequests,
@@ -9,7 +9,6 @@ import {
 import mechanicModel from "../models/mechanic.model.js";
 
 const router = express.Router();
-const clerk = new Clerk({ apiKey: process.env.CLERK_SECRET_KEY });
 
 router.get("/mechanic-requests", fetchAllRequests);
 router.post("/mechanic-requests", submitRequest);
@@ -31,12 +30,12 @@ router.get("/clerkUsers", async (req, res) => {
     const limit = 100; // Clerk max limit per request
 
     while (true) {
-      const usersResponse = await clerk.users.getUserList({
+      const usersResponse = await clerkClient.users.getUserList({
         limit,
         offset,
       });
 
-      allUsers = [...allUsers, ...usersResponse.data];
+      allUsers = [...allUsers, ...usersResponse];
 
       if (!usersResponse.hasMore) {
         break; // stop when there are no more users
