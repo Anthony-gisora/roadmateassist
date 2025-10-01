@@ -22,31 +22,36 @@ export const handleDriverRequest = async (req, res) => {
 export const updateRequestStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { servicedBy, status } = req.body;
+    const { servicedBy } = req.body;
 
-    if (status == "pending") {
-      const updated = await requestModel.findByIdAndUpdate(
-        id,
-        { status: "pending", servicedBy: "notYet" },
-        { new: true }
-      );
+    const updated = await requestModel.findByIdAndUpdate(
+      id,
+      { status: "InProgress", servicedBy: servicedBy },
+      { new: true }
+    );
 
-      if (!updated)
-        return res.status(404).json({ message: "Request not found" });
+    if (!updated) return res.status(404).json({ message: "Request not found" });
 
-      res.status(200).json(updated);
-    } else if (status == "InProgress") {
-      const updated = await requestModel.findByIdAndUpdate(
-        id,
-        { status: "InProgress", servicedBy: servicedBy },
-        { new: true }
-      );
+    res.status(200).json(updated);
+  } catch (err) {
+    console.error("Update error:", err.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
-      if (!updated)
-        return res.status(404).json({ message: "Request not found" });
+export const updateRequestStatusPending = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-      res.status(200).json(updated);
-    }
+    const updated = await requestModel.findByIdAndUpdate(
+      id,
+      { status: "pending", servicedBy: "notYet" },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ message: "Request not found" });
+
+    res.status(200).json(updated);
   } catch (err) {
     console.error("Update error:", err.message);
     res.status(500).json({ message: "Internal server error" });
