@@ -27,7 +27,7 @@ export const updateRequestStatus = async (req, res) => {
     if (status == "pending") {
       const updated = await requestModel.findByIdAndUpdate(
         id,
-        { status: status, servicedBy: servicedBy },
+        { status: "pending", servicedBy: "notYet" },
         { new: true }
       );
 
