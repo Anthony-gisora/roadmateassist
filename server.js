@@ -55,6 +55,8 @@ io.on("connection", (socket) => {
     // data: { driverId, lat, lng }
     console.log("Driver location update:", data);
 
+    socket.emit("online", { message: "You're now online" });
+
     // emit to  connected clients
     socket.emit("driverLocationUpdate", data);
   });
