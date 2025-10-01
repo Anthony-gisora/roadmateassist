@@ -30,17 +30,23 @@ export const updateRequestStatus = async (req, res) => {
         { status: status, servicedBy: servicedBy },
         { new: true }
       );
+
+      if (!updated)
+        return res.status(404).json({ message: "Request not found" });
+
+      res.status(200).json(updated);
     } else if (status == "InProgress") {
       const updated = await requestModel.findByIdAndUpdate(
         id,
         { status: "InProgress", servicedBy: servicedBy },
         { new: true }
       );
+
+      if (!updated)
+        return res.status(404).json({ message: "Request not found" });
+
+      res.status(200).json(updated);
     }
-
-    if (!updated) return res.status(404).json({ message: "Request not found" });
-
-    res.status(200).json(updated);
   } catch (err) {
     console.error("Update error:", err.message);
     res.status(500).json({ message: "Internal server error" });
