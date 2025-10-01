@@ -22,13 +22,21 @@ export const handleDriverRequest = async (req, res) => {
 export const updateRequestStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { servicedBy } = req.body;
+    const { servicedBy, status } = req.body;
 
-    const updated = await requestModel.findByIdAndUpdate(
-      id,
-      { status: "InProgress", servicedBy: servicedBy },
-      { new: true }
-    );
+    if (status == "pending") {
+      const updated = await requestModel.findByIdAndUpdate(
+        id,
+        { status: status, servicedBy: servicedBy },
+        { new: true }
+      );
+    } else if (status == "InProgress") {
+      const updated = await requestModel.findByIdAndUpdate(
+        id,
+        { status: "InProgress", servicedBy: servicedBy },
+        { new: true }
+      );
+    }
 
     if (!updated) return res.status(404).json({ message: "Request not found" });
 
