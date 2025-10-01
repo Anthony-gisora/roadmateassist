@@ -22,11 +22,11 @@ export const handleDriverRequest = async (req, res) => {
 export const updateRequestStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { servicedBy, status } = req.body;
+    const { servicedBy } = req.body;
 
     const updated = await requestModel.findByIdAndUpdate(
       id,
-      { status: status, servicedBy: servicedBy },
+      { status: "InProgress", servicedBy: servicedBy },
       { new: true }
     );
 
