@@ -44,6 +44,7 @@ export const register = async ({
     clerkUid,
     phone,
     location,
+    isOnline: "offline",
     distance,
   });
   await mechanic.save();

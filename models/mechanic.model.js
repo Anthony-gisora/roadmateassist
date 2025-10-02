@@ -8,6 +8,11 @@ const mechanicSchema = new mongoose.Schema(
     personalNumber: { type: String, unique: true, required: true },
     password: { type: String, required: true },
     phone: { type: String, unique: true, required: true },
+    isOnline: {
+      type: String,
+      enum: ["online", "offline"],
+      default: "offline",
+    },
     location: {
       lat: { type: Number },
       lng: { type: Number },

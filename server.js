@@ -45,7 +45,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/req", requestRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/notifications", notificationRoutes); // <-- Register route
+app.use("/api/notifications", notificationRoutes);
 
 // Socket.IO live updates
 io.on("connection", (socket) => {

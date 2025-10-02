@@ -31,6 +31,7 @@ export const registerMechanic = async (req, res) => {
         id: newMechanic._id,
         name: newMechanic.name,
         personalNumber: newMechanic.personalNumber,
+        isOnline: newMechanic.isOnline,
         clerkUid: newMechanic.clerkUid,
         location: newMechanic.location,
         distance: newMechanic.distance,
@@ -56,5 +57,26 @@ export const loginMechanic = async (req, res) => {
     });
   } catch (err) {
     res.status(401).json({ message: err.message });
+  }
+};
+
+export const handleOnOff = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { online } = req.body;
+
+    const updated = await Mechanic.findByIdAndUpdate(
+      id,
+      { isOnline: online },
+      { new: true }
+    );
+
+    if (!updated)
+      return res.status(404).json({ message: "Mechanic not found" });
+
+    res.status(200).json(updated);
+  } catch (err) {
+    console.error("Update error:", err.message);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
