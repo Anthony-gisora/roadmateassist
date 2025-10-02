@@ -1,3 +1,4 @@
+import mechanicModel from "../models/mechanic.model.js";
 import { login, register } from "../services/auth.service.js";
 
 export const registerMechanic = async (req, res) => {
@@ -65,7 +66,7 @@ export const handleOnOff = async (req, res) => {
     const { id } = req.params;
     const { online } = req.body;
 
-    const updated = await Mechanic.findByIdAndUpdate(
+    const updated = await mechanicModel.findByIdAndUpdate(
       id,
       { isOnline: online },
       { new: true }
@@ -75,6 +76,8 @@ export const handleOnOff = async (req, res) => {
       return res.status(404).json({ message: "Mechanic not found" });
 
     res.status(200).json(updated);
+    res.status(200).json({ id, online });
+    console.log(`${id} and ${online}`);
   } catch (err) {
     console.error("Update error:", err.message);
     res.status(500).json({ message: "Internal server error" });
