@@ -52,6 +52,7 @@ export const loginMechanic = async (req, res) => {
       mechanic: {
         id: mechanic._id,
         name: mechanic.name,
+        isOnline: mechanic.isOnline
         personalNumber: mechanic.personalNumber,
         clerkUid: mechanic.clerkUid,
       },
