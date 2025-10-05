@@ -9,7 +9,9 @@ import { connectDB } from "./config/db.js";
 import requestRoutes from "./routes/request.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
-import notificationRoutes from "./routes/notification.routes.js"; // <-- New
+import notificationRoutes from "./routes/notification.routes.js";
+
+import mechanicModel from "./models/mechanic.model.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -49,18 +51,27 @@ app.use("/api/notifications", notificationRoutes);
 
 // Socket.IO live updates
 io.on("connection", (socket) => {
-  console.log("🟢 A user connected:", socket.id);
-  // Listen for driver location updates
-  socket.on("driverLocationUpdate", (data) => {
-    // data: { driverId, lat, lng }
-    console.log("Driver location update:", data);
+  // When mechanic logs in or connects, client should send their _id
+  socket.on("registerMechanic", (mechanicId) => {
+    socket.mechanicId = mechanicId;
 
-    socket.emit("online", { message: "You're now online" });
-
-    // emit to  connected clients
-    socket.emit("driverLocationUpdate", data);
+    console.log(`Mechanic ${mechanicId} registered with socket ${socket.id}`);
   });
-  socket.on("disconnect", () => {
+  console.log("🟢 A user connected:", socket.id);
+
+  socket.on("disconnect", async () => {
+    if (socket.mechanicId) {
+      try {
+        await mechanicModel.findByIdAndUpdate(
+          socket.mechanicId,
+          { isOnline: "offline" },
+          { new: true }
+        );
+        console.log(`Mechanic ${socket.mechanicId} is now offline`);
+      } catch (err) {
+        console.error("Error updating mechanic on disconnect:", err);
+      }
+    }
     console.log("🔴 A user disconnected:", socket.id);
   });
 });
