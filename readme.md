@@ -55,7 +55,7 @@ RoadMateAssist is a full-stack web application designed to streamline the proces
 - npm or yarn
 
 ## API Endpoints
-- Outlined in Swagger
+- Outlined in Swagger at /docs
 
 
 ## Contact
