@@ -1,5 +1,9 @@
 import mechanicModel from "../models/mechanic.model.js";
 import { login, register } from "../services/auth.service.js";
+import { clerkClient } from "@clerk/clerk-sdk-node";
+import nodemailer from "nodemailer";
+
+let resetCodes = {};
 
 export const registerMechanic = async (req, res) => {
   const {
@@ -89,15 +93,22 @@ export const forgotPassword = async (req, res) => {
   const { identifier } = req.body;
 
   try {
+    // Find the mechanic by personal number
     const mechanic = await mechanicModel.findOne({
-      $or: [{ email: identifier }, { personalNumber: identifier }],
+      personalNumber: identifier,
     });
-
     if (!mechanic)
       return res.status(404).json({ message: "Mechanic not found" });
 
+    // Fetch Clerk user using the stored Clerk ID
+    const clerkUser = await clerkClient.users.getUser(mechanic.clerkUid);
+
+    // Extract email from Clerk data
+    const email = clerkUser.emailAddresses[0]?.emailAddress;
+    console.log(email);
+
     const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digit
-    resetCodes[mechanic.email] = code;
+    resetCodes[email] = code;
 
     // send email (adjust transporter for your credentials)
     const transporter = nodemailer.createTransport({
@@ -107,7 +118,7 @@ export const forgotPassword = async (req, res) => {
 
     await transporter.sendMail({
       from: `"RoadMate Assist" <${process.env.EMAIL_USER}>`,
-      to: mechanic.email,
+      to: email,
       subject: "Password Reset Code",
       text: `Your password reset code is: ${code}`,
     });
