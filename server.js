@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { connectDB } from "./config/db.js";
+import { swaggerUi, swaggerSpec } from "./swagger.js";
 
 import requestRoutes from "./routes/request.routes.js";
 import authRoutes from "./routes/auth.routes.js";
@@ -44,6 +45,7 @@ app.use(
 app.use(express.json());
 
 // Routes
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/auth", authRoutes);
 app.use("/api/req", requestRoutes);
 app.use("/api/admin", adminRoutes);
