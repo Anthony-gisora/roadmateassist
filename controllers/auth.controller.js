@@ -2,6 +2,7 @@ import mechanicModel from "../models/mechanic.model.js";
 import { login, register } from "../services/auth.service.js";
 import { clerkClient } from "@clerk/clerk-sdk-node";
 import nodemailer from "nodemailer";
+import bcrypt from "bcrypt";
 
 let resetCodes = {};
 
@@ -105,7 +106,6 @@ export const forgotPassword = async (req, res) => {
 
     // Extract email from Clerk data
     const email = clerkUser.emailAddresses[0]?.emailAddress;
-    console.log(email);
 
     const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digit
     resetCodes[email] = code;
@@ -128,47 +128,82 @@ export const forgotPassword = async (req, res) => {
       email: mechanic.email,
     });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Error sending reset code" });
   }
 };
 
-export const verifyCode = async () => {
-  const { code, email } = req.body;
+export const verifyCode = async (req, res) => {
+  try {
+    const { code, personalNumber } = req.body;
 
-  if (!resetCodes[email])
-    return res.status(400).json({ message: "No reset request found" });
+    // Find the mechanic by personal number
+    const mechanic = await mechanicModel.findOne({
+      personalNumber: personalNumber,
+    });
 
-  if (resetCodes[email] !== code)
-    return res.status(400).json({ message: "Invalid or expired code" });
+    if (!mechanic)
+      return res.status(404).json({ message: "Mechanic not found" });
 
-  // Optional: mark verified
-  resetCodes[email] = "VERIFIED";
+    // Fetch Clerk user using the stored Clerk ID
+    const clerkUser = await clerkClient.users.getUser(mechanic.clerkUid);
 
-  return res.json({ message: "Code verified successfully" });
+    // Extract email from Clerk data
+    const email = clerkUser.emailAddresses[0]?.emailAddress;
+
+    if (!resetCodes[email])
+      return res.status(400).json({ message: "No reset request found" });
+
+    if (resetCodes[email] !== code)
+      return res.status(400).json({ message: "Invalid or expired code" });
+
+    // Optional: mark verified
+    resetCodes[email] = "VERIFIED";
+
+    return res.json({ message: "Code verified successfully" });
+  } catch (err) {}
 };
 
-export const resetPass = async () => {
-  const { email, newPassword } = req.body;
+export const resetPass = async (req, res) => {
+  const { personalNumber, newPassword } = req.body;
+
+  console.log(newPassword);
 
   try {
+    // Find the mechanic by personal number
+    const mechanicEmail = await mechanicModel.findOne({
+      personalNumber: personalNumber,
+    });
+
+    if (!mechanicEmail)
+      return res.status(404).json({ message: "Mechanic not found" });
+
+    // Fetch Clerk user using the stored Clerk ID
+    const clerkUser = await clerkClient.users.getUser(mechanicEmail.clerkUid);
+
+    // Extract email from Clerk data
+    const email = clerkUser.emailAddresses[0]?.emailAddress;
+
     if (!resetCodes[email] || resetCodes[email] !== "VERIFIED") {
       return res.status(400).json({ message: "Code not verified or expired" });
     }
 
-    const mechanic = await Mechanic.findOne({ email });
-    if (!mechanic)
-      return res.status(404).json({ message: "Mechanic not found" });
-
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    mechanic.password = hashedPassword;
-    await mechanic.save();
+
+    const mechanic = await mechanicModel.findOneAndUpdate(
+      { personalNumber: personalNumber },
+      {
+        password: hashedPassword,
+      },
+      { new: true }
+    );
+    if (!mechanic)
+      return res.status(404).json({ message: "Mechanic not updated" });
 
     delete resetCodes[email]; // clear after success
 
     return res.json({ message: "Password reset successfully" });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Error resetting password" });
+    console.log(err);
   }
 };
