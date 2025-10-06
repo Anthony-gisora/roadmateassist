@@ -5,6 +5,7 @@ import {
   updateRequestStatus,
   updateRequestStatusPending,
 } from "../controllers/request.controller.js";
+import { updateComplete } from "../controllers/stkRequest.controller.js";
 
 const router = express.Router();
 
@@ -113,5 +114,6 @@ router.put("/update-pending/:id", updateRequestStatusPending);
  *         description: Request not found
  */
 router.put("/update-complete/:id", updateRequestComplete);
+router.put("/update-paid/:id", updateComplete);
 
 export default router;

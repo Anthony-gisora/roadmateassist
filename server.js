@@ -11,6 +11,7 @@ import requestRoutes from "./routes/request.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
+import stkpush from "./routes/stkRoutes.routes.js";
 
 import mechanicModel from "./models/mechanic.model.js";
 
@@ -50,6 +51,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/req", requestRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/stk", stkpush);
 
 // Socket.IO live updates
 io.on("connection", (socket) => {
