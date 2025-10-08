@@ -3,6 +3,7 @@ import { login, register } from "../services/auth.service.js";
 import { clerkClient } from "@clerk/clerk-sdk-node";
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 let resetCodes = {};
 
@@ -31,6 +32,8 @@ export const registerMechanic = async (req, res) => {
       distance,
     });
 
+    const token = createToken(newMechanic);
+
     res.status(201).json({
       message: "Registration successful",
       mechanic: {
@@ -42,6 +45,7 @@ export const registerMechanic = async (req, res) => {
         location: newMechanic.location,
         distance: newMechanic.distance,
       },
+      token,
     });
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -50,8 +54,12 @@ export const registerMechanic = async (req, res) => {
 
 export const loginMechanic = async (req, res) => {
   const { personalNumber, password, mechCLkId } = req.body;
+
   try {
     const mechanic = await login(personalNumber, password, mechCLkId);
+
+    const token = createToken(mechanic);
+
     res.status(200).json({
       message: "Login successful",
       mechanic: {
@@ -61,6 +69,7 @@ export const loginMechanic = async (req, res) => {
         personalNumber: mechanic.personalNumber,
         clerkUid: mechanic.clerkUid,
       },
+      token,
     });
   } catch (err) {
     res.status(401).json({ message: err.message });
@@ -206,4 +215,15 @@ export const resetPass = async (req, res) => {
     res.status(500).json({ message: "Error resetting password" });
     console.log(err);
   }
+};
+
+export const createToken = (user) => {
+  const payload = {
+    id: user._id.toString(),
+    email: user.email,
+  };
+
+  const token = jwt.sign(payload, process.env.JWT_SECRET);
+
+  return token;
 };

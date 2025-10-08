@@ -12,8 +12,9 @@ import authRoutes from "./routes/auth.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 import stkpush from "./routes/stkRoutes.routes.js";
-
+import conversationControler from "./controllers/conversationController.js";
 import mechanicModel from "./models/mechanic.model.js";
+import messageController from "./controllers/messageController.controller.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -52,6 +53,8 @@ app.use("/api/req", requestRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/stk", stkpush);
+app.use("/conversation", conversationControler);
+app.use("/message", messageController);
 
 // Socket.IO live updates
 io.on("connection", (socket) => {
