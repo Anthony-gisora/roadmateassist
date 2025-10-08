@@ -3,50 +3,31 @@ import { login, register } from "../services/auth.service.js";
 import { clerkClient } from "@clerk/clerk-sdk-node";
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 
 let resetCodes = {};
 
 export const registerMechanic = async (req, res) => {
-  const {
-    name,
-    personalNumber,
-    password,
-    clerkUid,
-    location,
-    distance,
-    phone,
-  } = req.body;
+  const bodyData = req.body;
 
   try {
-    const newMechanic = await register({
-      name,
-      personalNumber,
-      password,
-      clerkUid,
-      phone,
-      location: {
-        lat: location?.lat,
-        lng: location?.lng,
-      },
-      distance,
-    });
+    const newMechanic = await register(bodyData);
 
-    const token = createToken(newMechanic);
-
-    res.status(201).json({
-      message: "Registration successful",
-      mechanic: {
-        id: newMechanic._id,
-        name: newMechanic.name,
-        personalNumber: newMechanic.personalNumber,
-        isOnline: newMechanic.isOnline,
-        clerkUid: newMechanic.clerkUid,
-        location: newMechanic.location,
-        distance: newMechanic.distance,
-      },
-      token,
-    });
+    res.status(201).json(
+      //   {
+      //   message: "Registration successful",
+      //   mechanic: {
+      //     id: newMechanic._id,
+      //     name: newMechanic.name,
+      //     personalNumber: newMechanic.personalNumber,
+      //     isOnline: newMechanic.isOnline,
+      //     clerkUid: newMechanic.clerkUid,
+      //     location: newMechanic.location,
+      //     distance: newMechanic.distance,
+      //     token: newMechanic.token,
+      //   },
+      // }
+      newMechanicy
+    );
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -55,21 +36,28 @@ export const registerMechanic = async (req, res) => {
 export const loginMechanic = async (req, res) => {
   const { personalNumber, password, mechCLkId } = req.body;
 
-  try {
-    const mechanic = await login(personalNumber, password, mechCLkId);
+  const bodyData = {
+    personalNumber,
+    password,
+    mechCLkId,
+  };
 
-    const token = createToken(mechanic);
+  try {
+    const mechanic = await login(bodyData);
+
+    console.log(mechanic);
 
     res.status(200).json({
-      message: "Login successful",
-      mechanic: {
-        id: mechanic._id,
-        name: mechanic.name,
-        isOnline: mechanic.isOnline,
-        personalNumber: mechanic.personalNumber,
-        clerkUid: mechanic.clerkUid,
-      },
-      token,
+      // message: "Login successful",
+      // mechanic: {
+      //   id: mechanic._id,
+      //   name: mechanic.name,
+      //   isOnline: mechanic.isOnline,
+      //   personalNumber: mechanic.personalNumber,
+      //   clerkUid: mechanic.clerkUid,
+      // },
+      // token,
+      mechanic,
     });
   } catch (err) {
     res.status(401).json({ message: err.message });
@@ -215,15 +203,4 @@ export const resetPass = async (req, res) => {
     res.status(500).json({ message: "Error resetting password" });
     console.log(err);
   }
-};
-
-export const createToken = (user) => {
-  const payload = {
-    id: user._id.toString(),
-    email: user.email,
-  };
-
-  const token = jwt.sign(payload, process.env.JWT_SECRET);
-
-  return token;
 };
