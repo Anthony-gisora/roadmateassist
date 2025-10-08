@@ -58,7 +58,7 @@ export const loginMechanic = async (req, res) => {
   try {
     const mechanic = await login(personalNumber, password, mechCLkId);
 
-    const token = createToken(mechanic);
+    const token = await createToken(mechanic);
 
     res.status(200).json({
       message: "Login successful",
