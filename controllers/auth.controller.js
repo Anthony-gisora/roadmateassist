@@ -9,6 +9,8 @@ let resetCodes = {};
 export const registerMechanic = async (req, res) => {
   const bodyData = req.body;
 
+  console.log(bodyData);
+
   try {
     const newMechanic = await register(bodyData);
 
@@ -26,7 +28,7 @@ export const registerMechanic = async (req, res) => {
       //     token: newMechanic.token,
       //   },
       // }
-      newMechanicy
+      newMechanic
     );
   } catch (err) {
     res.status(400).json({ message: err.message });

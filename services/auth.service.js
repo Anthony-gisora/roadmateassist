@@ -54,7 +54,9 @@ export const register = async (
   // }
   bodyData
 ) => {
-  const existing = await Mechanic.findOne(bodyData.personalNumber);
+  const existing = await Mechanic.findOne({
+    personalNumber: bodyData.personalNumber,
+  });
   if (existing) throw new Error("Personal number already in use");
 
   const mechanic = new Mechanic({

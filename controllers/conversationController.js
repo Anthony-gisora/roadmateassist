@@ -45,7 +45,7 @@ router.get("/find/:userId", verifyToken, async (req, res) => {
 });
 
 // get a conversation
-router.get("/:convoId", async (req, res) => {
+router.get("/:convoId", verifyToken, async (req, res) => {
   try {
     const conversation = await Conversation.findById(req.params.convoId);
     if (conversation.members.includes(req.user.id)) {
