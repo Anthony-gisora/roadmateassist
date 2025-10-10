@@ -13,7 +13,7 @@ router.get("/userProf/:otherUserId", verifyToken, async (req, res) => {
     // Fetch only the necessary user fields
     const user = await mechanicModel
       .findById(otherUserId)
-      .select("personalNumber phone ");
+      .select("personalNumber phone _id");
 
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
